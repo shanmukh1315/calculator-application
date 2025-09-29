@@ -11,3 +11,14 @@ htmlcov/
 .vscode/
 .idea/
 .ipynb_checkpoints/
+.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+bin/
+lib/
+pyvenv.cfg
+.vscode/
+.idea/
