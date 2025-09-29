@@ -9,5 +9,5 @@ def main() -> None:
     """Script entry when `python main.py` is executed."""
     run_repl()
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

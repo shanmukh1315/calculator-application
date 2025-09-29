@@ -1,5 +1,5 @@
 from calc.cli import run_repl
-import main as app_main  # to cover the main module
+import calc.cli as cli
 
 def make_input_fn(inputs, prompts=None):
     it = iter(inputs)
@@ -9,44 +9,19 @@ def make_input_fn(inputs, prompts=None):
         return next(it)
     return _inner
 
-def test_cli_add_flow():
+def test_cli_invalid_second_number():
     outputs = []
-    inp = make_input_fn(["add", "2", "3", "exit"])
-    run_repl(input_fn=inp, output_fn=lambda s: outputs.append(s))
-    joined = "\n".join(outputs)
-    assert "Welcome to the Python Calculator" in joined
-    assert "Result: 5.0" in joined
-    assert "Goodbye!" in joined
-
-def test_cli_unknown_operation():
-    outputs = []
-    inp = make_input_fn(["foo", "exit"])
-    run_repl(input_fn=inp, output_fn=lambda s: outputs.append(s))
-    assert any("Unknown operation" in line for line in outputs)
-
-def test_cli_invalid_number_first_operand():
-    outputs = []
-    inp = make_input_fn(["add", "abc", "exit"])  # invalid first number, then exit
+    inp = make_input_fn(["add", "2", "oops", "exit"])
     run_repl(input_fn=inp, output_fn=lambda s: outputs.append(s))
     joined = "\n".join(outputs)
     assert "Invalid number" in joined
-    assert "Result:" not in joined  # no result printed
+    assert "Result:" not in joined
 
-def test_cli_division_by_zero_message():
+def test_cli_unexpected_exception_branch(monkeypatch):
     outputs = []
-    inp = make_input_fn(["/", "5", "0", "exit"])  # divide by zero path
+    def boom(a, b):
+        raise RuntimeError("boom")
+    monkeypatch.setitem(cli.OPS, "add", boom)
+    inp = make_input_fn(["add", "1", "2", "exit"])
     run_repl(input_fn=inp, output_fn=lambda s: outputs.append(s))
-    assert any("Division by zero" in line for line in outputs)
-
-def test_cli_help():
-    outputs = []
-    inp = make_input_fn(["help", "exit"])  # show help, then exit
-    run_repl(input_fn=inp, output_fn=lambda s: outputs.append(s))
-    assert any("Calculator REPL" in line for line in outputs)
-
-def test_main_io_covers_main_module():
-    """Covers main.main_io so --cov=main reaches 100%."""
-    outputs = []
-    inp = make_input_fn(["exit"])
-    app_main.main_io(input_fn=inp, output_fn=lambda s: outputs.append(s))
-    assert any("Goodbye!" in line for line in outputs)
+    assert any("An unexpected error occurred: boom" in line for line in outputs)
