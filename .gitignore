@@ -2,3 +2,12 @@ __pycache__/
 .pytest_cache/
 *.pyc
 .DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+.vscode/
+.idea/
+.ipynb_checkpoints/
