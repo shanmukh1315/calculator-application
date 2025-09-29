@@ -46,3 +46,15 @@ lib/
 pyvenv.cfg
 .vscode/
 .idea/
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.coverage
+htmlcov/
+.DS_Store
+bin/
+lib/
+pyvenv.cfg
+.vscode/
+.idea/
